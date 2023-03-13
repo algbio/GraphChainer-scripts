@@ -1,5 +1,6 @@
 # Python scripts for running GraphChainer experiments
 
+- - Install [miniconda](https://conda.io/projects/conda/en/latest/user-guide/install/index.html)
 - `conda env create -f environment.yml`
 - `conda acctivate GraphChainerScripts`
 - Compile and place the aligner's binaries on the `bin/` folder (they are assumed to be called `GraphAligner, GraphChainer, minigraph, minichain` respectively)
