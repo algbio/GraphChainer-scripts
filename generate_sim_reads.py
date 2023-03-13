@@ -11,7 +11,7 @@ def generate_sim_reads(args):
     graphchainer = getenv('GRAPHCHAINER')
 
     run(
-        f'{graphchainer} --generate-path --generate-path-seed {args.seed} -g {args.vg_graph} -f {args.fasta} -a tmp.gam'
+        f'{graphchainer} --generate-path --generate-path-seed {args.seed} -g {args.graph} -f {args.fasta} -a tmp.gam'
         .split()
     )
 
@@ -29,7 +29,7 @@ if __name__ == '__main__':
 
     parser = ArgumentParser(
         description='''
-            Generates simulated reads from a random path of an input vg file using the Badread simulator.
+            Generates simulated reads from a random path of an input vg/gfa file using the Badread simulator.
             Badread parameters are fixed to --identity 85,95,5 --length 15000,10000 --error_model pacbio2016
             --junk_reads 0 --random_reads 0 --chimeras 0.           
         ''',
@@ -37,7 +37,7 @@ if __name__ == '__main__':
     )
 
     requiredNamed = parser.add_argument_group('required arguments')
-    requiredNamed.add_argument('-vg', '--vg-graph', type=str, help='Input vg file', required=True)
+    requiredNamed.add_argument('-g', '--graph', type=str, help='Input vg/gfa file', required=True)
     requiredNamed.add_argument('-fq', '--fastq', type=str, help='Output fastq file', required=True)
 
     parser.add_argument('-s', '--seed', type=int, help='Seed for random path generator and Badread', default=0)

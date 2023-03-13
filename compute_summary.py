@@ -229,7 +229,7 @@ def compute_overlap(read, node):
 
 def compute_summary(args):
 
-    vertex_labels, edges = load_graph(args.gfa_graph)
+    vertex_labels, edges = load_graph(args.graph)
     reads, ref_seq, ref_seq_rev_comp, ref_path = load_reads_and_ref(args.fastq, args.fasta, args.path)
     node_limits = list(cumsum([len(vertex_labels[v]) for v in ref_path]))
 
@@ -340,7 +340,7 @@ if __name__ == '__main__':
     )
 
     requiredNamed = parser.add_argument_group('required arguments')
-    requiredNamed.add_argument('-gfa', '--gfa-graph', type=str, help='Input gfa file', required=True)
+    requiredNamed.add_argument('-g', '--graph', type=str, help='Input gfa file', required=True)
     requiredNamed.add_argument('-fq', '--fastq', type=str, help='Input fastq file', required=True)
     requiredNamed.add_argument(
         '-als', '--alignments', type=str, help='Output gam/gaf files (with extension, each)', required=True, nargs='+'
