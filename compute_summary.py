@@ -6,6 +6,7 @@ from numpy import cumsum
 from joblib import Parallel, delayed
 from edlib import align
 from bisect import bisect
+from re import split
 
 
 def load_graph(gfa_graph):
@@ -15,10 +16,10 @@ def load_graph(gfa_graph):
     for line in open(gfa_graph).read().split('\n')[:-1]:
         if line[0] == 'S':
             str_id, label = line[1:].strip().split()
-            vertex_labels[int(str_id)] = label
+            vertex_labels[str_id] = label
         if line[0] == 'L':
             tail_str_id, _, head_str_id, _, _ = line[1:].strip().split()
-            tail_id, head_id = int(tail_str_id), int(head_str_id)
+            tail_id, head_id = tail_str_id, head_str_id
             if tail_id not in edges:
                 edges[tail_id] = list()
             edges[tail_id].append(head_id)
@@ -40,7 +41,7 @@ def load_reads_and_ref(fastq, fasta, path):
 
     ref = open(fasta).readlines()[-1].strip() if fasta else ''
     ref_rev_comp = ''.join({'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C', 'N': 'N'}[b] for b in ref[::-1])
-    path = [int(s.strip().split()[1]) // 2 for s in open(path).readlines()] if path else list()
+    path = [s.strip().split()[1] for s in open(path).readlines()] if path else list()
 
     if path:
         reads = {
@@ -84,8 +85,10 @@ def parse_gam(raw_gam, vertex_labels):
 
     for x in raw_gam.path.mapping:
 
-        nodeidx = x.position.node_id
-        ll = vertex_labels[nodeidx]
+        node_name = x.position.name
+        if node_name =='':
+            node_name = str(x.position.node_id)
+        ll = vertex_labels[node_name]
         original_len = len(ll)
 
         if x.position.is_reverse:
@@ -122,7 +125,7 @@ def parse_gam(raw_gam, vertex_labels):
         if rev_cnt > 0:
             ll = ''.join({'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C', 'N': 'N'}[b] for b in ll[::-1])
 
-        path.append(nodeidx)
+        path.append(node_name)
         seqs.append(ll)
         idx += 1
 
@@ -152,12 +155,8 @@ def read_gaf(gaf_filename):
     for line in open(gaf_filename, 'r').read().split('\n')[:-1]:
         items = line.split('\t')
         raw_path = items[5]
-        if '<' in raw_path:
-            path = [int(node_id) for node_id in raw_path.split('<')[1:]]
-            rev = True
-        else:
-            path = [int(node_id) for node_id in raw_path.split('>')[1:]]
-            rev = False
+        path = split('<|>', raw_path)[1:]
+        rev = '<' in raw_path
 
         yield items[0], path, rev, int(items[7]), int(items[8])
 
