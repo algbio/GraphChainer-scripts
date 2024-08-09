@@ -179,6 +179,7 @@ def parse_gaf(raw_gaf, vertex_labels):
     for idx, node_id in enumerate(path):
 
         ll = vertex_labels[node_id]
+        original_length = len(ll)
 
         if idx == 0 and idx == n - 1:
             if rev_cnt > 0:
@@ -198,6 +199,9 @@ def parse_gaf(raw_gaf, vertex_labels):
 
         if rev_cnt > 0:
             ll = ''.join({'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C', 'N': 'N'}[b] for b in ll[::-1])
+            last_node_off += original_length
+        else:
+            last_node_off -= original_lengthß
 
         seqs.append(ll)
 
