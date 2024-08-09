@@ -201,7 +201,7 @@ def parse_gaf(raw_gaf, vertex_labels):
             ll = ''.join({'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C', 'N': 'N'}[b] for b in ll[::-1])
             last_node_off += original_length
         else:
-            last_node_off -= original_lengthß
+            last_node_off -= original_length
 
         seqs.append(ll)
 
