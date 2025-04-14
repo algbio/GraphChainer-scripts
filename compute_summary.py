@@ -14,12 +14,12 @@ def load_graph(gfa_graph):
     vertex_labels, edges = dict(), dict()
 
     for line in open(gfa_graph).read().split('\n')[:-1]:
-        if line[0] == 'S':
-            str_id, label = line[1:].strip().split()
+        line_data = line.strip().split()
+        if line_data[0] == 'S':
+            str_id, label = line_data[1:3]
             vertex_labels[str_id] = label
-        if line[0] == 'L':
-            tail_str_id, _, head_str_id, _, _ = line[1:].strip().split()
-            tail_id, head_id = tail_str_id, head_str_id
+        if line_data[0] == 'L':
+            tail_id, head_id = line_data[1:4:2]
             if tail_id not in edges:
                 edges[tail_id] = list()
             edges[tail_id].append(head_id)
